@@ -146,6 +146,7 @@ def get_zsh_plugins(keys):
 
 def main(argv):
     keys,email = get_params(argv)
+    print(f'---->{keys}<--')
     setup_git_config(email)
     setup_shell_config(keys)
     setup_vim_config()
