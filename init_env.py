@@ -18,6 +18,8 @@ ZSH_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master
 ZSH_CONFIG_DEST=expanduser("~/.zshrc")
 P10K_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/shell/.p10k.zsh'
 P10K_CONFIG_DEST=expanduser("~/.p10k.zsh")
+VIM_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/vim/.vimrc'
+VIM_CONFIG_DEST=expanduser("~/.vimrc")
 
 PLUGINS = {
     "common": ["jira", "zsh_reload", "catimg", "colored-man-pages", "colorize", "git", "command-not-found", "common-aliases"],
@@ -117,6 +119,14 @@ def setup_git_config(email):
     get_remote_file(GIT_CONFIG_SRC, GIT_CONFIG_DEST, lambda tmpFile: replace_file_content(tmpFile.name, r'\bXXX\b', email))
     print('=============== Done ===============')
 
+def setup_vim_config():
+    print('=============== Setup vim config ===============')
+    get_remote_file(VIM_CONFIG_SRC, VIM_CONFIG_DEST)
+    print('Install Vundle')
+    os.system('git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim')
+    print('=============== Done ===============')
+
+
 def setup_shell_config(keys):
     print('=============== Setup shell config ===============')
     print('Install Oh my ZSH')
@@ -138,6 +148,7 @@ def main(argv):
     keys,email = get_params(argv)
     setup_git_config(email)
     setup_shell_config(keys)
+    setup_vim_config()
 
 if __name__ == "__main__":
    main(sys.argv[1:])
