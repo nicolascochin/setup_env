@@ -20,9 +20,9 @@ P10K_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/maste
 P10K_CONFIG_DEST=expanduser("~/.p10k.zsh")
 
 PLUGINS = {
-    "common": "jira zsh_reload catimg colored-man-pages colorize git command-not-found common-aliases",
-    "mac": "dash osx",
-    "ruby": "another"
+    "common": ["jira", "zsh_reload", "catimg", "colored-man-pages", "colorize", "git", "command-not-found", "common-aliases"],
+    "mac": ["dash", "osx"],
+    "ruby": ["another"]
 }
 
 """The classical usage method"""
@@ -124,15 +124,20 @@ def setup_shell_config(keys):
     print('Install powerlevel10k')
     os.system('git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k')
     print('Get my zshrc config')
-    get_remote_file(ZSH_CONFIG_SRC, ZSH_CONFIG_DEST, lambda tmpFile: replace_file_content(tmpFile.name, r'\bXXX\b', 'todo'))
+    get_remote_file(ZSH_CONFIG_SRC, ZSH_CONFIG_DEST, lambda tmpFile: replace_file_content(tmpFile.name, r'\bPLUGINS\b', get_zsh_plugins(keys)))
     get_remote_file(P10K_CONFIG_SRC, P10K_CONFIG_DEST)
     print('=============== Done ===============')   
+
+def get_zsh_plugins(keys):
+    plugins = set()
+    for key in keys: 
+        plugins.update(PLUGINS[key])
+    return ', '.join(plugins)
 
 def main(argv):
     keys,email = get_params(argv)
     setup_git_config(email)
     setup_shell_config(keys)
-    print('targets are ', keys)
 
 if __name__ == "__main__":
    main(sys.argv[1:])
