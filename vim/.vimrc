@@ -3,6 +3,8 @@
 set nocompatible
 
 " ================ General Config ====================
+"turn on syntax highlighting
+syntax on
 
 set number                      "Line numbers are good
 set backspace=indent,eol,start  "Allow backspace in insert mode
@@ -19,31 +21,14 @@ set hlsearch
 " http://items.sjbach.com/319/configuring-vim-right
 set hidden
 
-"turn on syntax highlighting
-syntax on
-
-" Change leader to a comma because the backslash is too far away
-" That means all \x commands turn into ,x
-" The mapleader has to be set before vundle starts loading all 
-" the plugins.
-let mapleader=","
-
 " ================ Turn Off Swap Files ==============
 
 set noswapfile
 set nobackup
 set nowb
 
-" ================ Persistent Undo ==================
-" Keep undo history across sessions, by storing in file.
-" Only works all the time.
-" NOT WORKING: Didnt work when yanked right out of YADR
-"silent !mkdir ~/.vim/backups > /dev/null 2>&1
-"set undodir=~/.vim/backups
-"set undofile
 
 " ================ Indentation ======================
-
 set autoindent
 set smartindent
 set smarttab
@@ -55,14 +40,10 @@ set expandtab
 filetype plugin on
 filetype indent on
 
-" Display tabs and trailing spaces visually
-" set list listchars=tab:\ \ ,trail:Â·
-
 set wrap       "Wrap lines
 set linebreak    "Wrap lines at convenient points
 
 " ================ Completion =======================
-
 set wildmode=list:longest
 set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
 set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
@@ -76,8 +57,8 @@ set wildignore+=log/**
 set wildignore+=tmp/**
 set wildignore+=*.png,*.jpg,*.gif
 
-" ================ Scrolling ========================
 
+" ================ Scrolling ========================
 set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
@@ -102,6 +83,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 """"""""""""""""""""""""""""""""" MY VUNDLES """""""""""""""""""""""
 
-call vundle#end() 
+call vundle#end()
 " END OF VUNDLE PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""
+filetype plugin indent on    " requirediletype plugin indent on    " required
