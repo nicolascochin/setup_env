@@ -142,7 +142,9 @@ def get_zsh_plugins(keys):
     plugins = set()
     for key in keys: 
         plugins.update(PLUGINS[key])
-    return ' '.join(plugins)
+    res = list(plugins)
+    res.sort()
+    return ' '.join(res)
 
 def main(argv):
     keys,email = get_params(argv)
