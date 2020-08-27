@@ -27,7 +27,7 @@ PLUGINS = {
 
 """The classical usage method"""
 def usage(error_code=0):
-    print(f'{os.path.basename(__file__)} [options]')
+    print(f'init_env.py [options]')
     print('')
     print('Options')
     print('  -t --target <target>       One of {targets}'.format(targets=PLUGINS.keys()))
