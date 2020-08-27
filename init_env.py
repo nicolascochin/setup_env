@@ -123,7 +123,7 @@ def setup_vim_config():
     print('=============== Setup vim config ===============')
     get_remote_file(VIM_CONFIG_SRC, VIM_CONFIG_DEST)
     print('Install Vundle')
-    os.system('git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim')
+    os.system('if [ ! -d ~/.vim/bundle/Vundle.vim ]; then git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim; fi')
     print('=============== Done ===============')
 
 
