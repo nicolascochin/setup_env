@@ -65,6 +65,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(PLUGINS)
 
+if  command -v chroma &> /dev/null; then 
+  ZSH_COLORIZE_TOOL=chroma
+  ZSH_COLORIZE_CHROMA_FORMATTER=terminal256
+fi
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
