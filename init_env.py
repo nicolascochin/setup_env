@@ -12,10 +12,12 @@ import filecmp
 import re
 
 
-GIT_CONFIG_SRC='https://gist.githubusercontent.com/nicolascochin/ad40d5579a91dc50f2dd9e5203abb5a0/raw/b404af5d06246a31882de9f01ef844032e611e66/.gitconfig'
+GIT_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/git/.gitconfig'
 GIT_CONFIG_DEST=expanduser("~/.gitconfig")
-ZSH_CONFIG_SRC='https://gist.githubusercontent.com/nicolascochin/185b931869ed18b5542cd0706b0ee7c7/raw/4503710bfda21793dd0c79a661e6b78347f8d4a3/zshrc'
+ZSH_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/shell/.zshrc'
 ZSH_CONFIG_DEST=expanduser("~/.zshrc")
+P10K_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/shell/.p10k.zsh'
+P10K_CONFIG_DEST=expanduser("~/.p10k.zsh")
 
 PLUGINS = {
     "common": "jira zsh_reload catimg colored-man-pages colorize git command-not-found common-aliases",
@@ -123,6 +125,7 @@ def setup_shell_config(keys):
     os.system('git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k')
     print('Get my zshrc config')
     get_remote_file(ZSH_CONFIG_SRC, ZSH_CONFIG_DEST, lambda tmpFile: replace_file_content(tmpFile.name, r'\bXXX\b', 'todo'))
+    get_remote_file(P10K_CONFIG_SRC, P10K_CONFIG_DEST)
     print('=============== Done ===============')   
 
 def main(argv):
