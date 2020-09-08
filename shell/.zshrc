@@ -73,6 +73,9 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+if  command -v /usr/bin/most &> /dev/null; then 
+  export PAGER="/usr/bin/most -s"
+fi
 
 export PATH="/usr/local/sbin:$PATH"
 
