@@ -22,7 +22,7 @@ VIM_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master
 VIM_CONFIG_DEST=expanduser("~/.vimrc")
 
 PLUGINS = {
-    "common": ["jira", "zsh_reload", "catimg", "colored-man-pages", "colorize", "git", "command-not-found", "common-aliases"],
+    "common": ["jira", "zsh_reload", "catimg", "colored-man-pages", "colorize", "git", "common-aliases"],
     "mac": ["dash", "osx"],
     "ruby": ["another"]
 }
