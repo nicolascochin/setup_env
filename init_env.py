@@ -11,7 +11,7 @@ from pathlib import Path
 import filecmp
 import re
 
-ACCEPT_CHANGES=false
+ACCEPT_CHANGES=False
 GIT_ROOT='https://raw.githubusercontent.com/nicolascochin/setup_env/master'
 GIT_CONFIG_SRC=GIT_ROOT + '/git/.gitconfig'
 GIT_CONFIG_DEST=expanduser("~/.gitconfig")
@@ -61,7 +61,7 @@ def get_params(args):
         if opt in ("-h", "--help"):
             usage()
         if opt in ("-y"):
-            ACCEPT_CHANGES=true
+            ACCEPT_CHANGES=True
         elif opt in ("-t", "--target"):
             targets.append(arg)
         elif opt in ("-e", "--email"):
