@@ -11,6 +11,7 @@ from pathlib import Path
 import filecmp
 import re
 
+ACCEPT_CHANGES=false
 GIT_ROOT='https://raw.githubusercontent.com/nicolascochin/setup_env/master'
 GIT_CONFIG_SRC=GIT_ROOT + '/git/.gitconfig'
 GIT_CONFIG_DEST=expanduser("~/.gitconfig")
@@ -34,6 +35,7 @@ def usage(error_code=0):
     print('Options')
     print('  -t --target <target>       One of {targets}'.format(targets=PLUGINS.keys()))
     print('  -e --email <email>         The git email to use')
+    print('  -y                         Accept all changes')
     sys.exit(error_code)
 
 """Check the the given cadidates are all known plugins (a key in PLUGINS map)"""
@@ -52,18 +54,20 @@ def get_params(args):
     targets=[]
     email=''
     try:
-        opts, args = getopt.getopt(args,"he:t:",["target=", "email=", "help"])
+        opts, args = getopt.getopt(args,"yhe:t:",["target=", "email=", "help"])
     except getopt.GetoptError:
         usage(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
+        if opt in ("-y"):
+            ACCEPT_CHANGES=true
         elif opt in ("-t", "--target"):
             targets.append(arg)
         elif opt in ("-e", "--email"):
             email = arg
     validate_params(targets, email)
-    return targets, email
+    return targets, email, yes
 
 def replace_file(old, new):
     copyfile(old, new)
@@ -81,6 +85,8 @@ def print_file_differences(f1, f2):
         new=myfile.readlines()
     for line in difflib.context_diff(actual, new, fromfile=f1, tofile=f2):
         sys.stdout.write(line) 
+    if ACCEPT_CHANGES: 
+        return true
     while True:
         user_input = input('Override the local file? (y/n)')
         if re.match(r"^y|n$", user_input):
@@ -147,7 +153,7 @@ def get_zsh_plugins(keys):
     return ' '.join(res)
 
 def main(argv):
-    keys,email = get_params(argv)
+    keys,email,yes = get_params(argv)
     setup_git_config(email)
     setup_shell_config(keys)
     setup_vim_config()
