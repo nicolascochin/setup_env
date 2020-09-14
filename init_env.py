@@ -11,14 +11,14 @@ from pathlib import Path
 import filecmp
 import re
 
-
-GIT_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/git/.gitconfig'
+GIT_ROOT='https://raw.githubusercontent.com/nicolascochin/setup_env/master'
+GIT_CONFIG_SRC=GIT_ROOT + '/git/.gitconfig'
 GIT_CONFIG_DEST=expanduser("~/.gitconfig")
-ZSH_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/shell/.zshrc'
+ZSH_CONFIG_SRC=GIT_ROOT + '/shell/.zshrc'
 ZSH_CONFIG_DEST=expanduser("~/.zshrc")
-P10K_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/shell/.p10k.zsh'
+P10K_CONFIG_SRC=GIT_ROOT + '/shell/.p10k.zsh'
 P10K_CONFIG_DEST=expanduser("~/.p10k.zsh")
-VIM_CONFIG_SRC='https://raw.githubusercontent.com/nicolascochin/setup_env/master/vim/.vimrc'
+VIM_CONFIG_SRC=GIT_ROOT + '/vim/.vimrc'
 VIM_CONFIG_DEST=expanduser("~/.vimrc")
 
 PLUGINS = {
