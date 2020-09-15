@@ -67,7 +67,7 @@ def get_params(args):
         elif opt in ("-e", "--email"):
             email = arg
     validate_params(targets, email)
-    return targets, email, yes
+    return targets, email
 
 def replace_file(old, new):
     copyfile(old, new)
