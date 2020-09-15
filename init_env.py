@@ -61,6 +61,7 @@ def get_params(args):
         if opt in ("-h", "--help"):
             usage()
         if opt in ("-y"):
+            global ACCEPT_CHANGES
             ACCEPT_CHANGES=True
         elif opt in ("-t", "--target"):
             targets.append(arg)
@@ -86,7 +87,7 @@ def print_file_differences(f1, f2):
     for line in difflib.context_diff(actual, new, fromfile=f1, tofile=f2):
         sys.stdout.write(line) 
     if ACCEPT_CHANGES: 
-        return true
+        return True
     while True:
         user_input = input('Override the local file? (y/n)')
         if re.match(r"^y|n$", user_input):
