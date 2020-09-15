@@ -25,8 +25,8 @@ VIM_CONFIG_DEST=expanduser("~/.vimrc")
 PLUGINS = {
     "common": ["jira", "zsh_reload", "catimg", "colorize", "git", "common-aliases"],
     "docker": ["docker", "docker-compose"],
-    "heroku": ["heroku"]
-    "ruby": ["rbenv"]
+    "heroku": ["heroku"],
+    "ruby": ["rbenv"],
     "node": ["nvm"]
 }
 
