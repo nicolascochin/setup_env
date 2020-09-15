@@ -27,6 +27,7 @@ PLUGINS = {
     "docker": ["docker", "docker-compose"],
     "heroku": ["heroku"]
     "ruby": ["rbenv"]
+    "node": ["nvm"]
 }
 
 """The classical usage method"""
