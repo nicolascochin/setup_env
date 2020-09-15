@@ -26,6 +26,7 @@ PLUGINS = {
     "common": ["jira", "zsh_reload", "catimg", "colorize", "git", "common-aliases"],
     "docker": ["docker", "docker-compose"],
     "heroku": ["heroku"]
+    "ruby": ["rbenv"]
 }
 
 """The classical usage method"""
