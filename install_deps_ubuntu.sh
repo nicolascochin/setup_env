@@ -3,8 +3,9 @@
 USER=""
 INSTALL_SHELL=false
 INSTALL_DOCKER=false
+INSTALL_HEROKU=false
 
-while getopts "u:hsd" opt; do
+while getopts "u:hsdk" opt; do
   case $opt in
     s)
         INSTALL_SHELL=true 
@@ -15,6 +16,9 @@ while getopts "u:hsd" opt; do
     d) 
         INSTALL_DOCKER=true
         ;;
+    k) 
+        INSTALL_HEROKU=true
+        ;;
     h) 
         echo "Usage $0 [options]" 
         echo 
@@ -22,6 +26,7 @@ while getopts "u:hsd" opt; do
         echo "  -s          Install dependencies required by the Shell (script init_env)"
         echo "  -u [user]   Target user"
         echo "  -d          Install Docker"
+        echo "  -k          Install Heroku cli"
         echo "  -h          Display the usage"
         ;;
   esac
@@ -41,6 +46,10 @@ if $INSTALL_SHELL; then
       most
   sudo usermod --shell /bin/zsh ${USER}
   echo "=========="
+fi
+
+if $INSTALL_HEROKU; then 
+  curl https://cli-assets.heroku.com/install.sh | sh
 fi
 
 if $INSTALL_DOCKER; then 
