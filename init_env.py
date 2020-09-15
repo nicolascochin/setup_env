@@ -153,7 +153,7 @@ def get_zsh_plugins(keys):
     return ' '.join(res)
 
 def main(argv):
-    keys,email,yes = get_params(argv)
+    keys,email = get_params(argv)
     setup_git_config(email)
     setup_shell_config(keys)
     setup_vim_config()
