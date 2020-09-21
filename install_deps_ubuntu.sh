@@ -62,7 +62,7 @@ if $INSTALL_RUBY; then
       git curl autoconf bison build-essential \
       libssl-dev libyaml-dev libreadline6-dev zlib1g-dev \
       libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev
-  runuser -l #{USER} -c 'curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash'
+  sudo runuser -l #{USER} -c 'curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash'
 fi
 
 if $INSTALL_HEROKU; then 
