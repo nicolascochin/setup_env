@@ -53,6 +53,7 @@ if $INSTALL_SHELL; then
 fi
 
 if $INSTALL_RUBY; then 
+  echo "===== Install Rbenv ====="
   if [ -z $USER ]; then 
     echo "Option user is mandatory"
     exit 1
@@ -63,13 +64,17 @@ if $INSTALL_RUBY; then
       libssl-dev libyaml-dev libreadline6-dev zlib1g-dev \
       libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev
   sudo runuser -l #{USER} -c 'curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash'
+  echo "====="
 fi
 
 if $INSTALL_HEROKU; then 
+  echo "===== Install heroku CLI ====="
   curl https://cli-assets.heroku.com/install.sh | sh
+  echo "====="
 fi
 
 if $INSTALL_DOCKER; then 
+  echo "===== Install Docker ====="
   # Docker
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   sudo apt-key fingerprint 0EBFCD88
@@ -89,8 +94,10 @@ if $INSTALL_DOCKER; then
     containerd.io
   sudo usermod -aG docker ${USER}
   # Docker-compose
+  echo "===== Install Docker-compose ====="
   sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
   sudo ln -fs /usr/local/bin/docker-compose /usr/bin/docker-compose
+  echo "====="
 fi 
 echo "OK"
