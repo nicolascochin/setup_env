@@ -2,10 +2,11 @@
 
 USER=""
 INSTALL_SHELL=false
+INSTALL_RUBY=false
 INSTALL_DOCKER=false
 INSTALL_HEROKU=false
 
-while getopts "u:hsdk" opt; do
+while getopts "u:hsdrk" opt; do
   case $opt in
     s)
         INSTALL_SHELL=true 
@@ -19,6 +20,9 @@ while getopts "u:hsdk" opt; do
     k) 
         INSTALL_HEROKU=true
         ;;
+    r) 
+        INSTALL_RUBY=true
+        ;;        
     h) 
         echo "Usage $0 [options]" 
         echo 
@@ -46,6 +50,19 @@ if $INSTALL_SHELL; then
       most
   sudo usermod --shell /bin/zsh ${USER}
   echo "=========="
+fi
+
+if $INSTALL_RUBY; then 
+  if [ -z $USER ]; then 
+    echo "Option user is mandatory"
+    exit 1
+  fi
+  sudo apt update -y
+  sudo apt install \
+      git curl autoconf bison build-essential \
+      libssl-dev libyaml-dev libreadline6-dev zlib1g-dev \
+      libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev
+  runuser -l #{USER} -c 'curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash'
 fi
 
 if $INSTALL_HEROKU; then 
