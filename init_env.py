@@ -145,6 +145,8 @@ def setup_shell_config(keys):
     print('Get my zshrc config')
     get_remote_file(ZSH_CONFIG_SRC, ZSH_CONFIG_DEST, lambda tmpFile: replace_file_content(tmpFile.name, r'\bPLUGINS\b', get_zsh_plugins(keys)))
     get_remote_file(P10K_CONFIG_SRC, P10K_CONFIG_DEST)
+    os.system('cd ~/.oh-my-zsh && git clone git://github.com/zsh-users/zsh-syntax-highlighting.git')
+    os.system('cd ~/.oh-my-zsh && echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc')
     print('=============== Done ===============')   
 
 def get_zsh_plugins(keys):
