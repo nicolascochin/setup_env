@@ -99,8 +99,7 @@ setup_shell() {
     RUNZSH=no KEEP_ZSHRC=no sh -c \
       "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   else
-    echo "⚙️ Updating oh-my-zsh..."
-    git -C ~/.oh-my-zsh pull -q
+    omz update
   fi
 
   echo "🔗 Creating symlinks for ZSH config files..."
