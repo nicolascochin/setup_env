@@ -122,8 +122,11 @@ setup_shell() {
   shopt -s dotglob
   # Create files @ root only
   for file in "$INSTALL_DIR/zsh"/*; do
-    RELATIVE_PATH="${file#$FILES_DIR/}"
-    # ln -s -f "$file" "$TARGET_DIR/$RELATIVE_PATH"
+    RELATIVE_PATH="${file#$INSTALL_DIR/zsh/}"
+echo "RELATIVE_PATH: $RELATIVE_PATH"
+echo "file: $file"
+echo
+    # ln -s -f "$file" "$HOME/$RELATIVE_PATH"
     echo "Created symlink for: $RELATIVE_PATH"
   done
 
@@ -132,7 +135,7 @@ setup_shell() {
     RELATIVE_PATH="${DIR#$INSTALL_DIR/zsh/}"
     PARENT=$TARGET_DIR/$(dirname $RELATIVE_PATH)
     [[ ! -d $PARENT ]] && mkdir -p $PARENT
-    # ln -s -f "$DIR" "$TARGET_DIR/$RELATIVE_PATH"
+    # ln -s -f "$DIR" "$HOME/$RELATIVE_PATH"
     echo "Created symlink for: $RELATIVE_PATH"
   done
   # ln -sf "${INSTALL_DIR}/.zshrc" "${HOME}/.zshrc"
