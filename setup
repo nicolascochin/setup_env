@@ -1,0 +1,188 @@
+#!/usr/bin/env bash
+
+set -e
+
+REPO_URL="https://github.com/your-user/your-repo"
+INSTALL_DIR="${HOME}/.config/setup"
+
+declare -A PKG_MAP
+PKG_INSTALL=""
+OS=""
+
+print_help() {
+  echo "Usage: setup [--shell] [--neovim] [--system] [--all] [--help]"
+  echo
+  echo "Options:"
+  echo "  --shell       Install ZSH, oh-my-zsh, and link config files"
+  echo "  --neovim      Install Neovim"
+  echo "  --system      Install system-level tools (e.g. Homebrew, Distrobox)"
+  echo "  --all         Run all setup steps"
+  echo "  --help        Show this help message"
+}
+
+detect_os() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    OS="macos"
+    PKG_INSTALL="brew install"
+    PKG_MAP=(
+      [bat]="bat"
+      [ripgrep]="ripgrep"
+      [neovim]="neovim"
+      [zsh]="zsh"
+    )
+  elif [[ -f /etc/fedora-release ]]; then
+    if command -v rpm-ostree &>/dev/null; then
+      OS="silverblue"
+      PKG_INSTALL="sudo rpm-ostree install"
+    else
+      OS="fedora"
+      PKG_INSTALL="sudo dnf install -y"
+    fi
+    PKG_MAP=(
+      [bat]="bat"
+      [ripgrep]="ripgrep"
+      [neovim]="neovim"
+      [zsh]="zsh"
+    )
+  elif [[ -f /etc/debian_version ]]; then
+    OS="debian"
+    PKG_INSTALL="sudo apt-get install -y"
+    PKG_MAP=(
+      [bat]="batcat"
+      [ripgrep]="ripgrep"
+      [neovim]="neovim"
+      [zsh]="zsh"
+    )
+  else
+    echo "⛔ Unsupported operating system"
+    exit 1
+  fi
+}
+
+is_installed() {
+  local cmd="$1"
+  command -v "$cmd" &>/dev/null
+}
+
+install_pkg() {
+  local logical_name="$1"
+  local actual_name="${PKG_MAP[$logical_name]}"
+
+  if [ -z "$actual_name" ]; then
+    echo "⛔ Package '$logical_name' not defined for $OS"
+    return 1
+  fi
+
+  if is_installed "$actual_name"; then
+    echo "✔ $logical_name is already installed"
+  else
+    echo "→ Installing $logical_name ($actual_name)..."
+    $PKG_INSTALL "$actual_name"
+  fi
+}
+
+setup_repo() {
+  if [ ! -d "$INSTALL_DIR" ]; then
+    echo "📥 Cloning setup repository to $INSTALL_DIR..."
+    git clone "$REPO_URL" "$INSTALL_DIR"
+  else
+    echo "🔄 Updating existing setup repository..."
+    git -C "$INSTALL_DIR" pull
+  fi
+}
+
+setup_shell() {
+  install_pkg zsh
+
+  if [ ! -d "${HOME}/.oh-my-zsh" ]; then
+    echo "⚙️ Installing oh-my-zsh..."
+    RUNZSH=no KEEP_ZSHRC=no sh -c \
+      "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  else
+    echo "⚙️ Updating oh-my-zsh..."
+    (cd ~/.oh-my-zsh && git pull -q)
+  fi
+
+  echo "🔗 Creating symlinks for ZSH config files..."
+  ln -sf "${INSTALL_DIR}/.zshrc" "${HOME}/.zshrc"
+  ln -sf "${INSTALL_DIR}/.zsh_aliases" "${HOME}/.zsh_aliases"
+}
+
+setup_neovim() {
+  install_pkg neovim
+}
+
+setup_system_packages() {
+  echo "🛠️ Setting up system packages for $OS..."
+
+  case "$OS" in
+  macos)
+    if ! is_installed brew; then
+      echo "→ Installing Homebrew..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    else
+      echo "✔ Homebrew is already installed"
+    fi
+    ;;
+  silverblue)
+    if ! is_installed distrobox; then
+      echo "→ Installing Distrobox..."
+      sudo rpm-ostree install distrobox
+    else
+      echo "✔ Distrobox is already installed"
+    fi
+    ;;
+  *)
+    echo "ℹ️ No additional system setup required for $OS"
+    ;;
+  esac
+}
+
+main() {
+  if [[ "$1" == "--help" || "$#" -eq 0 ]]; then
+    print_help
+    exit 0
+  fi
+
+  detect_os
+  setup_repo
+
+  local do_system=0
+  local do_shell=0
+  local do_neovim=0
+
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+    --shell)
+      do_shell=1
+      ;;
+    --neovim)
+      do_neovim=1
+      ;;
+    --system)
+      do_system=1
+      ;;
+    --all)
+      do_shell=1
+      do_neovim=1
+      do_system=1
+      ;;
+    --help)
+      print_help
+      exit 0
+      ;;
+    *)
+      echo "⛔ Unknown option: $1"
+      print_help
+      exit 1
+      ;;
+    esac
+    shift
+  done
+
+  ((do_system)) && setup_system_packages
+  ((do_shell)) && setup_shell
+  ((do_neovim)) && setup_neovim
+}
+
+main "$@"
