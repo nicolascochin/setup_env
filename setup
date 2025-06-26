@@ -2,7 +2,7 @@
 
 set -e
 
-REPO_URL="https://github.com/your-user/your-repo"
+REPO_URL="https://github.com/nicolascochin/setup_env"
 INSTALL_DIR="${HOME}/.config/setup"
 
 declare -A PKG_MAP
@@ -104,8 +104,9 @@ setup_shell() {
   fi
 
   echo "🔗 Creating symlinks for ZSH config files..."
-  ln -sf "${INSTALL_DIR}/.zshrc" "${HOME}/.zshrc"
-  ln -sf "${INSTALL_DIR}/.zsh_aliases" "${HOME}/.zsh_aliases"
+  echo "todo"
+  # ln -sf "${INSTALL_DIR}/.zshrc" "${HOME}/.zshrc"
+  # ln -sf "${INSTALL_DIR}/.zsh_aliases" "${HOME}/.zsh_aliases"
 }
 
 setup_neovim() {
