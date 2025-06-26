@@ -107,7 +107,7 @@ setup_shell() {
     RUNZSH=no KEEP_ZSHRC=no sh -c \
       "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   else
-    omz update
+    $ZSH/tools/upgrade.sh
   fi
 
   echo "Install OMZ plugins"
