@@ -110,7 +110,7 @@ setup_shell() {
     $ZSH/tools/upgrade.sh
   fi
 
-  echo "Install OMZ plugins"
+  echo "OMZ plugins"
   clone_or_update_repository https://github.com/mattmc3/zshrc.d $HOME/.oh-my-zsh/custom/plugins/zshrc.d "zshrc.d"
   clone_or_update_repository "--depth=1 https://github.com/romkatv/powerlevel10k.git" $HOME/.oh-my-zsh/custom/themes/powerlevel10k "powerlevel10k"
   clone_or_update_repository https://github.com/wfxr/forgit.git "$HOME/.oh-my-zsh/custom/plugins/forgit" "forgit"
@@ -122,6 +122,7 @@ setup_shell() {
   shopt -s dotglob
   # Create files @ root only
   for file in "$INSTALL_DIR/zsh"/*; do
+    [[ ! -f $file ]] && continue
     RELATIVE_PATH="$HOME/${file#$INSTALL_DIR/zsh/}"
     if [[ ! -f $RELATIVE_PATH ]]; then
       ln -s -f "$file" "$RELATIVE_PATH"
@@ -133,8 +134,8 @@ setup_shell() {
   for DIR in $(find "$INSTALL_DIR/zsh" -mindepth 1 -type d -exec bash -c '[[ $(find "$1" -mindepth 1 -type d) ]] || echo "$1"' bash {} \;); do
     RELATIVE_PATH="$HOME/${DIR#$INSTALL_DIR/zsh/}"
     PARENT=$TARGET_DIR/$(dirname $RELATIVE_PATH)
-    [[ ! -d $PARENT ]] && mkdir -p $PARENT
-    if [[ ! -f $RELATIVE_PATH ]]; then
+    if [[ ! -d $RELATIVE_PATH ]]; then
+      [[ ! -d $PARENT ]] && mkdir -p $PARENT
       ln -s -f "$DIR" "$RELATIVE_PATH"
       echo "Created symlink for: $RELATIVE_PATH"
     fi
