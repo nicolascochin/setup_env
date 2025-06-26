@@ -154,6 +154,12 @@ setup_neovim() {
   curl -L https://github.com/neovim/neovim/releases/latest/download/nvim.appimage -o $NVIM_BIN
   chmod +x $NVIM_BIN
   ln -sf $NVIM_BIN /usr/bin/nvim
+  # Add config
+  if [[ ! -d $HOME/.config/nvim ]]; then
+    ln -s "$INSTALL_DIR/neovim" $HOME/.config/nvim
+    echo "Created symlink for: $HOME/.config/nvim"
+  fi
+
 }
 
 setup_system_packages() {
