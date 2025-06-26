@@ -26,8 +26,9 @@ detect_os() {
     PKG_INSTALL="brew install"
     PKG_MAP=(
       [bat]="bat"
+      [fzf]="fzf"
+      [fd_find]="fd-find"
       [ripgrep]="ripgrep"
-      [neovim]="neovim"
       [zsh]="zsh"
     )
   elif [[ -f /etc/fedora-release ]]; then
@@ -40,8 +41,9 @@ detect_os() {
     fi
     PKG_MAP=(
       [bat]="bat"
+      [fzf]="fzf"
+      [fd_find]="fd-find"
       [ripgrep]="ripgrep"
-      [neovim]="neovim"
       [zsh]="zsh"
     )
   elif [[ -f /etc/debian_version ]]; then
@@ -49,8 +51,9 @@ detect_os() {
     PKG_INSTALL="sudo apt-get install -y"
     PKG_MAP=(
       [bat]="batcat"
+      [fzf]="fzf"
+      [fd_find]="fd-find"
       [ripgrep]="ripgrep"
-      [neovim]="neovim"
       [zsh]="zsh"
     )
   else
@@ -143,7 +146,15 @@ setup_shell() {
 }
 
 setup_neovim() {
-  install_pkg neovim
+  # dependencies
+  install_pkg fzf
+  install_pkg fd_find
+  install_pkg ripgrep
+  # install nvim
+  NVIM_BIN=/usr/bin/nvim.appimage
+  curl -L https://github.com/neovim/neovim/releases/latest/download/nvim.appimage -o $NVIM_BIN
+  chmod +x $NVIM_BIN
+  ln -sf $NVIM_BIN /usr/bin/nvim
 }
 
 setup_system_packages() {
