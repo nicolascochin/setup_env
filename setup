@@ -59,6 +59,20 @@ detect_os() {
   fi
 }
 
+clone_or_update_repository() {
+  local url="$1"
+  local destination="$2"
+  local name="$3"
+
+  if [ ! -d "$destination" ]; then
+    echo "📥 Cloning "$name" repository to $destination..."
+    git clone -q "$url" "$destination"
+  else
+    echo "🔄 Updating existing $name repository..."
+    git -C "$destination" pull -q
+  fi
+}
+
 is_installed() {
   local cmd="$1"
   command -v "$cmd" &>/dev/null
@@ -82,13 +96,7 @@ install_pkg() {
 }
 
 setup_repo() {
-  if [ ! -d "$INSTALL_DIR" ]; then
-    echo "📥 Cloning setup repository to $INSTALL_DIR..."
-    git clone -q "$REPO_URL" "$INSTALL_DIR"
-  else
-    echo "🔄 Updating existing setup repository..."
-    git -C "$INSTALL_DIR" pull -q
-  fi
+  clone_or_update_repository "$REPO_URL" "$INSTALL_DIR" "setup"
 }
 
 setup_shell() {
@@ -102,8 +110,31 @@ setup_shell() {
     omz update
   fi
 
+  echo "Install OMZ plugins"
+  clone_or_update_repository https://github.com/mattmc3/zshrc.d $HOME/.oh-my-zsh/custom/plugins/zshrc.d "zshrc.d"
+  clone_or_update_repository "--depth=1 https://github.com/romkatv/powerlevel10k.git" $HOME/.oh-my-zsh/custom/themes/powerlevel10k "powerlevel10k"
+  clone_or_update_repository https://github.com/wfxr/forgit.git "$HOME/.oh-my-zsh/custom/plugins/forgit" "forgit"
+  clone_or_update_repository https://github.com/z-shell/F-Sy-H.git "$HOME/.oh-my-zsh/custom/plugins/F-Sy-H" "F-Sy-H"
+  clone_or_update_repository https://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" "autosuggestions"
+
   echo "🔗 Creating symlinks for ZSH config files..."
-  echo "todo"
+  # Loop through all files in the files directory
+  shopt -s dotglob
+  # Create files @ root only
+  for file in "$INSTALL_DIR/zsh"/*; do
+    RELATIVE_PATH="${file#$FILES_DIR/}"
+    # ln -s -f "$file" "$TARGET_DIR/$RELATIVE_PATH"
+    echo "Created symlink for: $RELATIVE_PATH"
+  done
+
+  # For folders, take the last one and create a link to the folder
+  for DIR in $(find "$INSTALL_DIR/zsh" -mindepth 1 -type d -exec bash -c '[[ $(find "$1" -mindepth 1 -type d) ]] || echo "$1"' bash {} \;); do
+    RELATIVE_PATH="${DIR#$INSTALL_DIR/zsh/}"
+    PARENT=$TARGET_DIR/$(dirname $RELATIVE_PATH)
+    [[ ! -d $PARENT ]] && mkdir -p $PARENT
+    # ln -s -f "$DIR" "$TARGET_DIR/$RELATIVE_PATH"
+    echo "Created symlink for: $RELATIVE_PATH"
+  done
   # ln -sf "${INSTALL_DIR}/.zshrc" "${HOME}/.zshrc"
   # ln -sf "${INSTALL_DIR}/.zsh_aliases" "${HOME}/.zsh_aliases"
 }
