@@ -107,8 +107,7 @@ setup_shell() {
 
   if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     echo "⚙️ Installing oh-my-zsh..."
-    RUNZSH=no KEEP_ZSHRC=no sh -c \
-      "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    RUNZSH=no KEEP_ZSHRC=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   else
     $ZSH/tools/upgrade.sh
   fi
