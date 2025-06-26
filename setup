@@ -84,10 +84,10 @@ install_pkg() {
 setup_repo() {
   if [ ! -d "$INSTALL_DIR" ]; then
     echo "📥 Cloning setup repository to $INSTALL_DIR..."
-    git clone "$REPO_URL" "$INSTALL_DIR"
+    git clone -q "$REPO_URL" "$INSTALL_DIR"
   else
     echo "🔄 Updating existing setup repository..."
-    git -C "$INSTALL_DIR" pull
+    git -C "$INSTALL_DIR" pull -q
   fi
 }
 
@@ -100,7 +100,7 @@ setup_shell() {
       "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   else
     echo "⚙️ Updating oh-my-zsh..."
-    (cd ~/.oh-my-zsh && git pull -q)
+    git -C ~/.oh-my-zsh pull -q
   fi
 
   echo "🔗 Creating symlinks for ZSH config files..."
