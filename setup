@@ -122,24 +122,19 @@ setup_shell() {
   shopt -s dotglob
   # Create files @ root only
   for file in "$INSTALL_DIR/zsh"/*; do
-    RELATIVE_PATH="${file#$INSTALL_DIR/zsh/}"
-echo "RELATIVE_PATH: $RELATIVE_PATH"
-echo "file: $file"
-echo
-    # ln -s -f "$file" "$HOME/$RELATIVE_PATH"
+    RELATIVE_PATH="$HOME/${file#$INSTALL_DIR/zsh/}"
+    ln -s -f "$file" "$RELATIVE_PATH"
     echo "Created symlink for: $RELATIVE_PATH"
   done
 
   # For folders, take the last one and create a link to the folder
   for DIR in $(find "$INSTALL_DIR/zsh" -mindepth 1 -type d -exec bash -c '[[ $(find "$1" -mindepth 1 -type d) ]] || echo "$1"' bash {} \;); do
-    RELATIVE_PATH="${DIR#$INSTALL_DIR/zsh/}"
+    RELATIVE_PATH="$HOME/${DIR#$INSTALL_DIR/zsh/}"
     PARENT=$TARGET_DIR/$(dirname $RELATIVE_PATH)
     [[ ! -d $PARENT ]] && mkdir -p $PARENT
-    # ln -s -f "$DIR" "$HOME/$RELATIVE_PATH"
+    ln -s -f "$DIR" "$RELATIVE_PATH"
     echo "Created symlink for: $RELATIVE_PATH"
   done
-  # ln -sf "${INSTALL_DIR}/.zshrc" "${HOME}/.zshrc"
-  # ln -sf "${INSTALL_DIR}/.zsh_aliases" "${HOME}/.zsh_aliases"
 }
 
 setup_neovim() {
