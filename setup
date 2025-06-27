@@ -147,7 +147,7 @@ setup_neovim() {
   install_pkg ripgrep
   # install nvim
   NVIM_BIN=/usr/bin/nvim.appimage
-  curl -L https://github.com/neovim/neovim/releases/latest/download/nvim.appimage -o $NVIM_BIN
+  curl -L -o $NVIM_BIN "https://github.com/neovim/neovim/releases/latest/download/nvim-$([[ $(uname -s) == "Linux" ]] && echo "linux" || echo "macos")-$([[ $(uname -m) == "aarch64" ]] && echo "arm64" || echo "x86_64").appimage"
   chmod +x $NVIM_BIN
   ln -sf $NVIM_BIN /usr/bin/nvim
   # Add config
