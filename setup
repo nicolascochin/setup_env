@@ -126,21 +126,17 @@ setup_shell() {
   for file in "$INSTALL_DIR/zsh"/*; do
     [[ ! -f $file ]] && continue
     RELATIVE_PATH="$HOME/${file#$INSTALL_DIR/zsh/}"
-    if [[ ! -f $RELATIVE_PATH ]]; then
-      ln -s -f "$file" "$RELATIVE_PATH"
-      echo "Created symlink for: $RELATIVE_PATH"
-    fi
+    ln -s -f "$file" "$RELATIVE_PATH"
+    echo "Created symlink for: $RELATIVE_PATH"
   done
 
   # For folders, take the last one and create a link to the folder
   for DIR in $(find "$INSTALL_DIR/zsh" -mindepth 1 -type d -exec bash -c '[[ $(find "$1" -mindepth 1 -type d) ]] || echo "$1"' bash {} \;); do
     RELATIVE_PATH="$HOME/${DIR#$INSTALL_DIR/zsh/}"
     PARENT=$TARGET_DIR/$(dirname $RELATIVE_PATH)
-    if [[ ! -d $RELATIVE_PATH ]]; then
-      [[ ! -d $PARENT ]] && mkdir -p $PARENT
-      ln -s -f "$DIR" "$RELATIVE_PATH"
-      echo "Created symlink for: $RELATIVE_PATH"
-    fi
+    [[ ! -d $PARENT ]] && mkdir -p $PARENT
+    ln -s -f "$DIR" "$RELATIVE_PATH"
+    echo "Created symlink for: $RELATIVE_PATH"
   done
 }
 
