@@ -1,0 +1,1 @@
+/var/home/foo/.config/setup_env/zsh/.zshrc.d

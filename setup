@@ -144,12 +144,12 @@ setup_shell() {
 
 setup_neovim() {
   # dependencies
-  install_pkg fzf
-  install_pkg fd_find
-  install_pkg ripgrep
+  [ ! is_installed fzf ] && install_pkg fzf
+  [ ! is_installed fd ] && install_pkg fd_find
+  [ ! is_installed rg ] && install_pkg ripgrep
   # install nvim
   NVIM_BIN=$HOME/.local/bin/nvim.appimage
-  mkdir -p $(dirname $NVIM_BIN) 
+  mkdir -p $(dirname $NVIM_BIN)
   curl -L -o $NVIM_BIN "https://github.com/neovim/neovim/releases/latest/download/nvim-$([[ $(uname -s) == "Linux" ]] && echo "linux" || echo "macos")-$([[ $(uname -m) == "aarch64" ]] && echo "arm64" || echo "x86_64").appimage"
   chmod +x $NVIM_BIN
   ln -sf $NVIM_BIN $(dirname $NVIM_BIN)/nvim
