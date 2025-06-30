@@ -105,14 +105,11 @@ setup_repo() {
 setup_shell() {
   install_pkg zsh
 
+  sudo chsh -s $(which zsh) $USER
+
   if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     echo "⚙️ Installing oh-my-zsh..."
-(
-    export CHSH=yes 
-export RUNZSH=no 
-export KEEP_ZSHRC=no 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-)
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   else
     $ZSH/tools/upgrade.sh
   fi
