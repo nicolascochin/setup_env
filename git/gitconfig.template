@@ -1,0 +1,17 @@
+[user]
+  name = $GIT_NAME
+  email = $GIT_EMAIL
+[color]
+  ui = true
+[pull]
+  rebase = true
+[push]
+  autoSetupRemote = true
+[help]
+  autocorrect = 1
+[core]
+  editor = nvim
+  excludesfile = ~/.git-global-ignore
+[rerere]
+  enabled = true
+
