@@ -187,18 +187,34 @@ setup_neovim() {
 
 }
 
+setup_macos() {
+  if ! is_installed brew; then
+      echo "→ Installing Homebrew..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      if [[ $(uname -m) == "arm64" ]]; then
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      else
+        echo 'eval "$(/usr/local/bin/brew shellenv)"' >> "$HOME/.bash_profile"
+        eval "$(/usr/local/bin/brew shellenv)"
+      fi
+    else
+      echo "✔ Homebrew is already installed"
+    fi
+    ! is_installed lima && echo "→ Installing lima..." && brew install lima
+    ! is_installed lima && echo "→ Installing bash..." && brew install bash
+    ! is_installed envsubst && echo "→ Installing gettext..." && brew install gettext
+    ! brew list | grep font-fira-code-nerd-font > / dev/null && echo "→ Installing font-fira-code-nerd-font..." && brew install font-fira-code-nerd-font
+    ! brew list | grep font-fira-code > / dev/null && echo "→ Installing font-fira-code..." && brew install font-fira-code
+    ! brew list | grep font-meslo-for-powerlevel10k > / dev/null && echo "→ Installing font-meslo-for-powerlevel10k..." && brew install font-meslo-for-powerlevel10k
+}
+
 setup_system_packages() {
   echo "🛠️ Setting up system packages for $OS..."
 
   case "$OS" in
   macos)
-    if ! is_installed brew; then
-      echo "→ Installing Homebrew..."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    else
-      echo "✔ Homebrew is already installed"
-    fi
-    ! is_installed lima && brew install lima
+    setup_macos
     ;;
   silverblue)
     if ! is_installed distrobox; then
