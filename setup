@@ -138,7 +138,10 @@ setup_shell() {
     ln -s -f "$DIR" "$RELATIVE_PATH"
     echo "Created symlink for: $RELATIVE_PATH"
   done
+  setup_git
+}
 
+setup_git() {
   echo "📝 Setting up git config..."
   TEMPLATE_PATH="$INSTALL_DIR/git/gitconfig.template"
   TARGET_GITCONFIG="$HOME/.gitconfig"
@@ -167,9 +170,9 @@ setup_shell() {
 
 setup_neovim() {
   # dependencies
-  [ ! is_installed fzf ] && install_pkg fzf
-  [ ! is_installed fd ] && install_pkg fd_find
-  [ ! is_installed rg ] && install_pkg ripgrep
+  [[ ! is_installed fzf ]] && install_pkg fzf
+  [[ ! is_installed fd ]] && install_pkg fd_find
+  [[ ! is_installed rg ]] && install_pkg ripgrep
   # install nvim
   NVIM_BIN=$HOME/.local/bin/nvim.appimage
   mkdir -p $(dirname $NVIM_BIN)
