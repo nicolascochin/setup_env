@@ -198,6 +198,7 @@ setup_system_packages() {
     else
       echo "✔ Homebrew is already installed"
     fi
+    ! is_installed lima && brew install lima
     ;;
   silverblue)
     if ! is_installed distrobox; then
