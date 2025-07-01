@@ -28,6 +28,7 @@ BREW_PACKAGES=(
   wezterm      # Terminal
   virtualbuddy # Virtual machines
   lima         # Distrobox like (not as cool)
+  gh
   font-fira-code-nerd-font 
   font-fira-code 
   font-meslo-for-powerlevel10k
@@ -37,5 +38,8 @@ for pkg in "${BREW_PACKAGES[@]}"; do
   echo "➡️ Installing $pkg..."
   brew install "$pkg"
 done
+
+echo "Setup github..."
+gh auth login 
 
 echo "🎉 Setup complete!"
