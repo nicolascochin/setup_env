@@ -64,4 +64,7 @@ for FONT_NAME in "${!FONTS[@]}"; do
   ) || echo "Font $DEST already installed"
 done
 
+## Shell & neovim 
+bash <(curl -Ls https://raw.githubusercontent.com/nicolascochin/setup_env/main/setup) --shell --neovim
+
 echo "🎉 Setup complete!"
