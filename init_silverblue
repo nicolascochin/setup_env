@@ -2,13 +2,6 @@
 
 set -e
 
-is_installed() {
-  local cmd="$1"
-  command -v "$cmd" &>/dev/null
-}
-
-echo "🔧 Setting up your Silverbue from scratch..."
-echo "Install packages..."
 PACKAGES_TO_INSTALL=(
   gh                       # Github CLI
   distrobox                # Distrobox
@@ -20,8 +13,25 @@ PACKAGES_TO_INSTALL=(
   solaar                   # Logitech keyboard
   solaar-udev              # Logitech keyboard
 )
-rpm-ostree install -y ${PACKAGES_TO_INSTALL[@]} && reboot
-echo "Packages installed."
+
+is_installed() {
+  local cmd="$1"
+  command -v "$cmd" &>/dev/null
+}
+
+echo "🔧 Setting up your Silverbue from scratch..."
+echo "Install packages..."
+MISSING_PACKAGES=()
+for pkg in "${PACKAGES_TO_INSTALL[@]}"; do
+  if ! rpm -q "$pkg" &>/dev/null; then
+    MISSING_PACKAGES+=("$pkg")
+  fi
+done
+if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
+  rpm-ostree install -y "${MISSING_PACKAGES[@]}" && reboot
+else
+  echo "All packages are already installed. Skipping rpm-ostree install."
+fi
 
 ## InitramFS
 ! rpm-ostree status -b | grep -q "Initramfs: regenerate" && (
