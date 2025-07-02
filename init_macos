@@ -39,7 +39,20 @@ for pkg in "${BREW_PACKAGES[@]}"; do
   brew install "$pkg"
 done
 
-echo "Setup github..."
+echo "🔐 Setup GitHub authentication..."
 gh auth login 
+
+echo "🖥️  Creating Lima VM with Podman..."
+limactl create --name default --mount-writable template://podman
+echo "📦 Installing packages inside the Lima VM..."
+lima -- sh -c 'sudo dnf install -y distrobox git'
+# Set group wheel to avoid errors not in sudo group (inside a distrobox)
+echo "👥 Adding current user to the wheel group..."
+lima -- sh -c 'sudo usermod -aG wheel $(whoami)'
+echo "⚙️  Setting up the shell environment inside the VM..."
+lima -- bash -c "curl -fsSL https://raw.githubusercontent.com/nicolascochin/setup_env/main/setup -o /tmp/setup && bash /tmp/setup --shell"
+echo "🔄 Restarting the Lima VM to apply changes..."
+limactl stop && limactl start
+
 
 echo "🎉 Setup complete!"
