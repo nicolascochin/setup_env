@@ -34,7 +34,7 @@ echo "Packages installed."
 gh auth status 2>&1 | grep -q "not logged into"  && (
   echo "Login to Github" && \
   gh auth login \
-) || echo "Already logged into Hithub"
+) || echo "Already logged into Github"
 
 ## Fonts
 FONT_DIR=${HOME}/.local/share/fonts
@@ -48,9 +48,9 @@ declare -A FONTS=(
 for FONT_NAME in "${!FONTS[@]}"; do 
   FONT_URL="${FONTS[$FONT_NAME]}"
   DEST="${FONT_DIR}/${FONT_NAME}"
-  test -f "$DEST" && (
+  ! test -f "$DEST" && (
     echo "Install font $FONT_NAME..." && \
-    curl -fsSL ${FONT_URL} -o "${FONT_DIR}/${FONT_NAME}" \
+    curl -fsSL ${FONT_URL} -o "${DEST}" \
   ) || echo "Font $DEST already installed"
 done
 
