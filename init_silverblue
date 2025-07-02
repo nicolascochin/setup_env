@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -e
+
+is_installed() {
+  local cmd="$1"
+  command -v "$cmd" &>/dev/null
+}
+
+echo "🔧 Setting up your Silverbue from scratch..."
+echo "Install packages..."
+PACKAGES_TO_INSTALL=(
+  gh                       # Github CLI
+  distrobox                # Distrobox
+  libappindicator-gtk3     # Gnome Shell extension for tray icons
+  mozilla-https-everywhere # HTTPS enforcement extension for Mozilla Firefox
+  podman-compose
+  zsh
+  fira-code-fonts          # Font
+  solaar                   # Logitech keyboard
+  solaar-udev              # Logitech keyboard
+)
+rpm-ostree install -y ${PACKAGES_TO_INSTALL[@]} && reboot
+echo "Packages installed."
+
+## InitramFS
+! rpm-ostree status -b | grep -q "Initramfs: regenerate" && (
+  echo "Enable initramfs..." 
+  && rpm-ostree initramfs --enable 2> /dev/null 
+  && reboot
+) || echo "Initramfs already enabled"
+
+# Github
+gh auth status 2>&1 | grep -q "not logged into"  && (
+  echo "Login to Github" 
+  && gh auth login
+) || echo "Already logged into Hithub"
+
+## Fonts
+FONT_DIR=${HOME}/.local/share/fonts
+mkdir -p $FONT_DIR
+declare -A FONTS=(
+  ["MesloLGS NF Regular.ttf"]="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+  ["MesloLGS NF Bold.ttf"]="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
+  ["MesloLGS NF Italic.ttf"]="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
+  ["MesloLGS NF Bold Italic.ttf"]="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
+)
+for FONT_NAME in "${!FONTS[@]}"; do 
+  FONT_URL="${FONTS[$FONT_NAME]}"
+  DEST="${FONT_DIR}/${FONT_NAME}"
+  test -f "$DEST" && (
+    echo "Install font $FONT_NAME..."
+    curl -fsSL ${FONT_URL} -o "${FONT_DIR}/${FONT_NAME}"
+  ) || echo "Font $DEST already installed"
+done
+
+echo "🎉 Setup complete!"
