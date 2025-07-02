@@ -47,7 +47,7 @@ detect_os() {
     )
   elif [[ -f /etc/debian_version ]]; then
     OS="debian"
-    PKG_INSTALL="sudo apt-get install -y"
+    PKG_INSTALL="sudo apt-get install -qq -y"
     PKG_MAP=(
       [bat]="batcat"
       [fd_find]="fd-find"
@@ -170,7 +170,7 @@ setup_git() {
 setup_neovim() {
   # dependencies
   ! is_installed fzf && (
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&
+    git clone -q --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&
       ~/.fzf/install
   )
   ! is_installed gcc && install_pkg gcc
