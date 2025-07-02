@@ -10,12 +10,11 @@ PKG_INSTALL=""
 OS=""
 
 print_help() {
-  echo "Usage: setup [--shell] [--neovim] [--system] [--all] [--help]"
+  echo "Usage: setup [--shell] [--neovim] [--all] [--help]"
   echo
   echo "Options:"
   echo "  --shell       Install ZSH, oh-my-zsh, and link config files"
   echo "  --neovim      Install Neovim"
-  echo "  --system      Install system-level tools (e.g. Homebrew, Distrobox)"
   echo "  --all         Run all setup steps"
   echo "  --help        Show this help message"
 }
@@ -26,10 +25,10 @@ detect_os() {
     PKG_INSTALL="brew install"
     PKG_MAP=(
       [bat]="bat"
-      [fzf]="fzf"
       [fd_find]="fd-find"
       [ripgrep]="ripgrep"
       [zsh]="zsh"
+      [gcc]="gcc"
     )
   elif [[ -f /etc/fedora-release ]]; then
     if command -v rpm-ostree &>/dev/null; then
@@ -41,20 +40,20 @@ detect_os() {
     fi
     PKG_MAP=(
       [bat]="bat"
-      [fzf]="fzf"
       [fd_find]="fd-find"
       [ripgrep]="ripgrep"
       [zsh]="zsh"
+      [gcc]="gcc"
     )
   elif [[ -f /etc/debian_version ]]; then
     OS="debian"
     PKG_INSTALL="sudo apt-get install -y"
     PKG_MAP=(
       [bat]="batcat"
-      [fzf]="fzf"
       [fd_find]="fd-find"
       [ripgrep]="ripgrep"
       [zsh]="zsh"
+      [gcc]="gcc"
     )
   else
     echo "⛔ Unsupported operating system"
@@ -170,7 +169,11 @@ setup_git() {
 
 setup_neovim() {
   # dependencies
-  ! is_installed fzf && install_pkg fzf
+  ! is_installed fzf && (
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf &&
+      ~/.fzf/install
+  )
+  ! is_installed gcc && install_pkg gcc
   ! is_installed fd && install_pkg fd_find
   ! is_installed rg && install_pkg ripgrep
   # install nvim
@@ -187,49 +190,6 @@ setup_neovim() {
 
 }
 
-setup_macos() {
-  if ! is_installed brew; then
-      echo "→ Installing Homebrew..."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      if [[ $(uname -m) == "arm64" ]]; then
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-      else
-        echo 'eval "$(/usr/local/bin/brew shellenv)"' >> "$HOME/.bash_profile"
-        eval "$(/usr/local/bin/brew shellenv)"
-      fi
-    else
-      echo "✔ Homebrew is already installed"
-    fi
-    ! is_installed lima && echo "→ Installing lima..." && brew install lima
-    ! is_installed lima && echo "→ Installing bash..." && brew install bash
-    ! is_installed envsubst && echo "→ Installing gettext..." && brew install gettext
-    ! brew list | grep font-fira-code-nerd-font > / dev/null && echo "→ Installing font-fira-code-nerd-font..." && brew install font-fira-code-nerd-font
-    ! brew list | grep font-fira-code > / dev/null && echo "→ Installing font-fira-code..." && brew install font-fira-code
-    ! brew list | grep font-meslo-for-powerlevel10k > / dev/null && echo "→ Installing font-meslo-for-powerlevel10k..." && brew install font-meslo-for-powerlevel10k
-}
-
-setup_system_packages() {
-  echo "🛠️ Setting up system packages for $OS..."
-
-  case "$OS" in
-  macos)
-    setup_macos
-    ;;
-  silverblue)
-    if ! is_installed distrobox; then
-      echo "→ Installing Distrobox..."
-      sudo rpm-ostree install distrobox
-    else
-      echo "✔ Distrobox is already installed"
-    fi
-    ;;
-  *)
-    echo "ℹ️ No additional system setup required for $OS"
-    ;;
-  esac
-}
-
 main() {
   if [[ "$1" == "--help" || "$#" -eq 0 ]]; then
     print_help
@@ -239,7 +199,6 @@ main() {
   detect_os
   setup_repo
 
-  local do_system=0
   local do_shell=0
   local do_neovim=0
 
@@ -251,13 +210,9 @@ main() {
     --neovim)
       do_neovim=1
       ;;
-    --system)
-      do_system=1
-      ;;
     --all)
       do_shell=1
       do_neovim=1
-      do_system=1
       ;;
     --help)
       print_help
@@ -272,7 +227,6 @@ main() {
     shift
   done
 
-  ((do_system)) && setup_system_packages
   ((do_shell)) && setup_shell
   ((do_neovim)) && setup_neovim
 }
