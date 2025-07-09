@@ -70,6 +70,7 @@ arch)
 *)
     echo "⛔ Unsupported operating system"
     exit 1
+esac
   fi
 }
 
