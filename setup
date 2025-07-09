@@ -56,7 +56,7 @@ detect_os() {
       [gcc]="gcc"
     )
   else
-    case $(. /etc/os-release && echp $ID) in 
+    case $(. /etc/os-release && echo $ID) in 
 arch)
     OS="arch"
     PKG_INSTALL="sudo pacman -S --needed --noconfirm"
