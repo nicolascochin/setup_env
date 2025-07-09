@@ -56,6 +56,18 @@ detect_os() {
       [gcc]="gcc"
     )
   else
+    case (. /etc/os-release && echp $ID) in 
+arch)
+    OS="arch"
+    PKG_INSTALL="sudo pacman -S --needed --noconfirm"
+    PKG_MAP=(
+      [bat]="bat"
+      [fd_find]="fd"
+      [ripgrep]="ripgrep"
+      [zsh]="zsh"
+      [gcc]="gcc"
+;;
+*)
     echo "⛔ Unsupported operating system"
     exit 1
   fi
