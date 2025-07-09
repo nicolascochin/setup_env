@@ -66,6 +66,7 @@ arch)
       [ripgrep]="ripgrep"
       [zsh]="zsh"
       [gcc]="gcc"
+)
 ;;
 *)
     echo "⛔ Unsupported operating system"
